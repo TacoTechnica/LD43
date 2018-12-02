@@ -4,10 +4,71 @@
     <Config>Configs\Default</Config>
   </Configs>
   <NewExtensions/>
-  <sounds name="sound"/>
-  <sprites name="sprites"/>
-  <backgrounds name="background"/>
+  <sounds name="sound">
+    <sound>sound\sound_player_walk_1</sound>
+    <sound>sound\sound_player_walk_2</sound>
+    <sound>sound\sound_goat_walk_1</sound>
+    <sound>sound\sound_goat_walk_2</sound>
+    <sound>sound\sound_goat_choke</sound>
+    <sound>sound\sound_goat_fall</sound>
+    <sound>sound\sound_pickup</sound>
+    <sound>sound\sound_goat_alert</sound>
+  </sounds>
+  <sprites name="sprites">
+    <sprites name="masks">
+      <sprite>sprites\maskCollision</sprite>
+      <sprite>sprites\maskEntity</sprite>
+    </sprites>
+    <sprites name="lights">
+      <sprite>sprites\sprLight</sprite>
+      <sprite>sprites\sprLightBeam</sprite>
+    </sprites>
+    <sprites name="icons">
+      <sprite>sprites\sprZ</sprite>
+      <sprite>sprites\sprAlerts</sprite>
+    </sprites>
+    <sprite>sprites\sprPlayer</sprite>
+    <sprite>sprites\sprGoat</sprite>
+    <sprite>sprites\sprSentry</sprite>
+    <sprite>sprites\sprGoatPassedOut</sprite>
+    <sprite>sprites\sprGoatSubdue</sprite>
+    <sprite>sprites\sprTest</sprite>
+    <sprite>sprites\sprHay</sprite>
+  </sprites>
+  <backgrounds name="background">
+    <background>background\bk_tileset</background>
+  </backgrounds>
   <paths name="paths"/>
+  <scripts name="scripts">
+    <script>scripts\mover.gml</script>
+    <script>scripts\alerter.gml</script>
+    <script>scripts\goat.gml</script>
+    <script>scripts\camera_follow.gml</script>
+    <script>scripts\player.gml</script>
+    <script>scripts\sentry.gml</script>
+  </scripts>
+  <objects name="objects">
+    <object>objects\objCollision</object>
+    <objects name="utility">
+      <object>objects\Gamestate</object>
+      <object>objects\objLighting</object>
+      <object>objects\objGrid</object>
+      <object>objects\objPhysics</object>
+      <object>objects\objPickup</object>
+      <object>objects\objAlerter</object>
+      <object>objects\objMover</object>
+    </objects>
+    <object>objects\objPlayer</object>
+    <object>objects\objGoat</object>
+    <object>objects\objSentry</object>
+    <object>objects\objPlayerSubduing</object>
+    <object>objects\objGoatSleeping</object>
+    <object>objects\objHay</object>
+  </objects>
+  <rooms name="rooms">
+    <room>rooms\room_START</room>
+    <room>rooms\room1</room>
+  </rooms>
   <help>
     <rtf>help.rtf</rtf>
   </help>
