@@ -34,6 +34,8 @@
     <sprite>sprites\sprGoatSubdue</sprite>
     <sprite>sprites\sprTest</sprite>
     <sprite>sprites\sprHay</sprite>
+    <sprite>sprites\sprBrick</sprite>
+    <sprite>sprites\sprWood</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bk_tileset</background>
@@ -64,6 +66,7 @@
     <object>objects\objPlayerSubduing</object>
     <object>objects\objGoatSleeping</object>
     <object>objects\objHay</object>
+    <object>objects\objBrick</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\room_START</room>

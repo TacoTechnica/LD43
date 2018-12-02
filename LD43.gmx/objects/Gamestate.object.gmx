@@ -50,9 +50,12 @@ _camera_shake = 0;
             <string>/// Particles
 _main_part_system = part_system_create();
 part_system_depth(_main_part_system, -1000);
+_main_part_system_ground = part_system_create();
+part_system_depth(_main_part_system_ground, 1000);
 
+
+// Z's!
 _goat_z_part_type = part_type_create();
-
 part_type_sprite(_goat_z_part_type, sprZ, true, false, false);
 part_type_alpha3(_goat_z_part_type, 0.3, 0.7, 0.0);
 part_type_life(_goat_z_part_type, 60, 60+40);
@@ -61,6 +64,16 @@ part_type_direction(_goat_z_part_type, 0, 180, 0, 2);
 part_type_gravity(_goat_z_part_type, 0.045, 90);
 part_type_orientation(_goat_z_part_type, -5, 5, 0, 0.5, false);
 part_type_size(_goat_z_part_type, 0.1, 0.3, 0.05, 0.05);
+
+// Dust from the brick
+_brick_part_type = part_type_create();
+part_type_shape(_brick_part_type, pt_shape_cloud);
+part_type_alpha3(_brick_part_type, 0.3, 0.9, 0.0);
+part_type_life(_brick_part_type, 20, 40);
+part_type_speed(_brick_part_type, 0.4, 1, -1 / 60, 0);
+part_type_direction(_brick_part_type, 0, 359, 0, 0);
+part_type_orientation(_brick_part_type, 0, 359, 0.0, 0.4, false);
+part_type_size(_brick_part_type, 0.1, 0.3, 0.01, 0);
 </string>
           </argument>
         </arguments>

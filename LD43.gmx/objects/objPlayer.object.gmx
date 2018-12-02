@@ -98,6 +98,8 @@ _move_force = 0.22;
 // Util
 _move_x_axis = 0;
 _move_y_axis = 0;
+
+_last_move_dir = 0;
 </string>
           </argument>
         </arguments>
@@ -193,6 +195,9 @@ if _state != PLAYER_STATE.CUTSCENE {
     _move_x_axis = 0;
     _move_y_axis = 0;
 }
+
+if _move_x_axis != 0 || _move_y_axis != 0
+    _last_move_dir = point_direction(0, 0, _move_x_axis, _move_y_axis);
 </string>
           </argument>
         </arguments>
@@ -326,9 +331,18 @@ if _state == PLAYER_STATE.NORMAL &amp;&amp; keyboard_check_pressed(vk_space) {
         audio_play_sound(sound_pickup, 5, false);
     } else if _item_pickup != noone {
         // TODO: Throw if a brick or something
-        _item_pickup.y = y + 4;
-        _item_pickup = noone;
-        audio_play_sound(sound_goat_fall, 5, false);
+        if player_get_item_index() = objBrick {
+            var throw_side_vel = 3;
+            _item_pickup._height = 3;
+            _item_pickup._vel_h = 2;
+            _item_pickup._vel_x = lengthdir_x(throw_side_vel, _last_move_dir);
+            _item_pickup._vel_y = lengthdir_y(throw_side_vel, _last_move_dir);
+            _item_pickup = noone;
+        } else {
+            _item_pickup.y = y + 4;
+            _item_pickup = noone;
+            audio_play_sound(sound_goat_fall, 5, false);
+        }
     }
 
     // Subdue goats!
