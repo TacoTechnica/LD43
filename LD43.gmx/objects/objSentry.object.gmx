@@ -39,6 +39,28 @@
         <arguments>
           <argument>
             <kind>1</kind>
+            <string>/// Overrides
+_fric = 0.2;
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
             <string>/// Alerter and sound alarm
 alerter_init();
 _alarm_sound = -1;
@@ -72,7 +94,467 @@ enum SENTRY_STATE {
     ALERT          // Running after player
 };
 
+_state = SENTRY_STATE.POST;
+
+// When we're done searching, we go back to this position.
+_post_target_x = x;
+_post_target_y = y;
+
+// Where we're searching and running to
+_move_target_x = -1;
+_move_target_y = -1;
+
+// Force of movement or running
+_move_force = 0.14;
+_run_force = 0.205;
+
+// Timer for seeing player
+_player_see_timer = 0;
+_player_see_timer_max = 60;
+
+// Timer for forgetting player
+_player_forget_timer = 0;
+_player_forget_timer_max = 60 * 6;
+
 _look_direction = 0;
+_look_direction_target = 0;
+
+// Do we see the player?
+_sees_player = false;
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Path finding
+
+_path = path_add();
+_path_point_index = 1;
+_pathing = false;
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Bounce progress
+_bounce_progress_counter = 0;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="1" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>path_delete(_path);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Randomly set look direction
+
+var counter = 0;
+do {
+    _look_direction_target = choose(0, 90, 270, 360);
+    counter++;
+} until 
+    !collision_line(x, y, x + lengthdir_x(30, _look_direction_target), y + lengthdir_y(30, _look_direction_target), objCollision, false, true)
+    || counter &gt;= 5;
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="3" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>604</id>
+        <kind>0</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>0</useapplyto>
+        <exetype>1</exetype>
+        <functionname>action_inherited</functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// State machine
+
+var max_range = 200;
+
+var distance_to_player_sqr = sqr(x - objPlayer.x) + sqr(y - objPlayer.y);
+var angle_to_player = point_direction(x, y, objPlayer.x, objPlayer.y);
+
+var closeenough = distance_to_player_sqr &lt; sqr(max_range);
+var angle_right = abs(angle_difference(_look_direction, angle_to_player)) &lt; 70;
+_sees_player = 
+      (distance_to_player_sqr &lt; sqr(16)) 
+      || (
+        closeenough &amp;&amp; angle_right &amp;&amp; 
+        !collision_line(x, y, objPlayer.x, objPlayer.y, objCollision, false, false)
+      );
+
+switch _state {
+    case SENTRY_STATE.POST:
+        alerter_set_alert(ALERT_STATE.NORMAL);
+        _player_see_timer = 0;
+        _player_forget_timer = 0;
+        if _sees_player {
+            _state = SENTRY_STATE.SEARCHING;
+            _move_target_x = objPlayer.x;
+            _move_target_y = objPlayer.y;
+        }
+        // Kind of a failsafe bandaid
+        if sqr(x - _post_target_x) + sqr(y - _post_target_y) &gt; sqr(16) {
+            _state = SENTRY_STATE.COMING_BACK;
+            _move_target_x = _post_target_x;
+            _move_target_y = _post_target_y;
+        }
+        // Random look direction
+        if (alarm[0] == -1) {
+            alarm[0] = random(60) + 200;
+        }
+        
+        break;
+    case SENTRY_STATE.COMING_BACK:
+        alerter_set_alert(ALERT_STATE.NORMAL);
+        _move_target_x = _post_target_x;
+        _move_target_y = _post_target_y;
+        // Follow path to get back to post
+        break;
+    case SENTRY_STATE.SEARCHING:
+        alerter_set_alert(ALERT_STATE.HUH);
+        if _sees_player {
+            _move_target_x = objPlayer.x;
+            _move_target_y = objPlayer.y;
+            _look_direction_target = angle_to_player;
+            _player_see_timer += 2 * (1 - (distance_to_player_sqr / sqr(max_range)));
+            if _player_see_timer &gt; _player_see_timer_max {
+                // Saw player for long enough, attack!!
+                _state = SENTRY_STATE.ALERT;
+            }
+        } else {
+            _player_see_timer--;
+        }
+        _player_see_timer = clamp(_player_see_timer, 0, _player_see_timer_max);
+        alerter_set_question_fill(_player_see_timer / _player_see_timer_max);
+        break;
+    case SENTRY_STATE.ALERT:
+        alerter_set_alert(ALERT_STATE.ALERT);
+         if _sees_player {
+            _player_forget_timer = 0;
+            _move_target_x = objPlayer.x;
+            _move_target_y = objPlayer.y;
+            _look_direction_target = angle_to_player;
+         } else {
+            _player_forget_timer++;
+            if _player_forget_timer &gt; _player_forget_timer_max {
+                _state = SENTRY_STATE.COMING_BACK;
+            }
+         }
+        break;
+        
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Go to target!
+
+// Do we have a clean shot?
+if _state != SENTRY_STATE.POST {
+    var tx = _move_target_x, ty = _move_target_y;
+    if !collision_line(x, y, _move_target_x, _move_target_y, objCollision, true, true) {
+        // Beeline!
+        tx = _move_target_x;
+        ty = _move_target_y;
+        _pathing = false;
+    } else {
+        // Path planning!
+        var grid_target_x = 16*floor(_move_target_x) / 16 + 8;
+        var grid_target_y = 16*floor(_move_target_y) / 16 + 8;
+        if mp_grid_path(objGrid._grid, _path, x, y, grid_target_x, grid_target_y, true) {
+            if !_pathing {
+                // First run, set index to 0
+                _pathing = true;
+                _path_point_index = 1;
+            }
+            tx = path_get_point_x(_path, _path_point_index);
+            ty = path_get_point_y(_path, _path_point_index);
+            if sqr(x - tx) + sqr(y - ty) &lt; sqr(16) {
+                // Cap it to the ending. We detect the ending later (distance to _move_target)
+                if (_path_point_index != path_get_length(_path))
+                    _path_point_index++;
+            }
+            //path_start(_path, _run_force, path_action_stop, false);
+        } else {
+            _pathing = false;
+        }
+    }
+    var dir = point_direction(x, y, tx, ty);
+    _look_direction_target = dir;
+    var force = _move_force;
+    if _state == SENTRY_STATE.ALERT
+        force = _run_force;
+    _vel_x += lengthdir_x(force, dir);
+    _vel_y += lengthdir_y(force, dir);
+
+    if !_sees_player &amp;&amp; sqr(x - _move_target_x) + sqr(y - _move_target_y) &lt; sqr(16) {
+        switch _state {
+            case SENTRY_STATE.SEARCHING:
+                _state = SENTRY_STATE.COMING_BACK;
+                break;
+            case SENTRY_STATE.COMING_BACK:
+                _state = SENTRY_STATE.POST;
+                break;
+        }
+    }
+} else {
+    _pathing = false;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Look direction and smoothing
+_look_direction += 0.2 * angle_difference(_look_direction_target, _look_direction);
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Set Bounce
+
+var bounce_speed = mover_get_bounce_scale();
+var bounce_scale = mover_get_bounce_speed();
+
+// If we're moving, scale up!
+var target_scale = _state != SENTRY_STATE.POST;
+
+// Start from zero
+if !target_scale &amp;&amp; abs(bounce_scale) &lt; 0.05 {
+    mover_reset_bounce();
+    _bounce_progress_counter = 0;
+}
+
+bounce_speed += (target_scale - bounce_speed) * 0.1;
+bounce_scale += (target_scale - bounce_scale) * 0.3;
+
+mover_set_bounce_speed(bounce_speed);
+mover_set_bounce_scale(bounce_scale);
+
+// Every bump
+if mover_get_bounce_progress() &gt; _bounce_progress_counter {
+    _bounce_progress_counter = ceil(mover_get_bounce_progress());
+    if (x &gt;= view_xview &amp;&amp; x &lt;= view_xview + view_wview &amp;&amp; y &gt;= view_yview &amp;&amp; y &lt;= view_yview + view_hview) {
+        if _bounce_progress_counter % 2 == 0
+            audio_play_sound(sound_goat_walk_1, 2, false);
+        else
+            audio_play_sound(sound_goat_walk_2, 2, false);
+    }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Visuals
+depth = -y;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>604</id>
+        <kind>0</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>0</useapplyto>
+        <exetype>1</exetype>
+        <functionname>action_inherited</functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Debug
+//draw_path(_path, x, y, false);
+
+draw_text(x - 16, y, _state);
+
+/*
+draw_set_color(c_red);
+draw_line_width(x, y, path_get_point_x(_path, _path_point_index), path_get_point_y(_path, _path_point_index), 3);
+draw_text(x - 16, y, _path_point_index);
+
+
+draw_set_color(c_yellow);
+draw_line_width(x, y, path_get_point_x(_path, 2), path_get_point_y(_path, 2), 3);
+
+draw_set_color(c_white);
+*/
 </string>
           </argument>
         </arguments>

@@ -290,7 +290,8 @@ switch _state {
         }
         break;
     case GOAT_STATE.FLEEING:
-        if sees_player {
+        var near_guard = collision_circle(x, y, 50, objSentry, false, false);
+        if sees_player &amp;&amp; !near_guard {
             goat_set_alert();
             alarm[1] = -1;
         } else {
@@ -331,6 +332,38 @@ if _state != GOAT_STATE.FLEEING {
 if _state != GOAT_STATE.FLEEING &amp;&amp; instance_exists(objPlayerSubduing) {
     if !collision_line(x, y, objPlayerSubduing.x, objPlayerSubduing.y, objCollision, false, true) {
         goat_set_alert();
+    }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Alert guards if fleeing
+if _state == GOAT_STATE.FLEEING {
+    with (objSentry) {
+        if !_sees_player {
+            if sqr(x - other.x) + sqr(y - other.y) &lt; sqr(200) {
+                _move_target_x = objPlayer.x;
+                _move_target_y = objPlayer.y;
+                _state = SENTRY_STATE.SEARCHING;
+            }
+        }
     }
 }
 </string>

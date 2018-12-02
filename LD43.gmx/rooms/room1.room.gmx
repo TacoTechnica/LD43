@@ -81,7 +81,7 @@
     <instance objName="objCollision" x="288" y="352" name="inst_5E5F6FE7" locked="0" code="" scaleX="1" scaleY="2" colour="4294967295" rotation="0"/>
     <instance objName="objCollision" x="352" y="352" name="inst_2BC8E108" locked="0" code="" scaleX="1" scaleY="2" colour="4294967295" rotation="0"/>
     <instance objName="objSentry" x="512" y="240" name="inst_FBFAB957" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
-    <instance objName="objSentry" x="304" y="272" name="inst_96603003" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
+    <instance objName="objSentry" x="256" y="272" name="inst_96603003" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
     <instance objName="objGrid" x="0" y="0" name="inst_5CA0966A" locked="0" code="" scaleX="1" scaleY="1" colour="4294967295" rotation="0"/>
   </instances>
   <tiles/>

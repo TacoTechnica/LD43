@@ -55,6 +55,28 @@ _state = ALERT_STATE.NORMAL;
         <arguments>
           <argument>
             <kind>1</kind>
+            <string>/// Question mark fill
+_question_fill = 0;
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
             <string>/// Follower object
 _follower = noone;
 </string>
@@ -110,9 +132,15 @@ if (_follower != noone) {
             <kind>1</kind>
             <string>/// draw alert at proper location
 
-if _state != ALERT_STATE.NORMAL
+if _state != ALERT_STATE.NORMAL {
     draw_sprite(sprite_index, _state - 1, x, y);
+}
 
+// Question fill!
+if _state == ALERT_STATE.HUH {
+    var top = sprite_height*(1 - _question_fill);
+    draw_sprite_part(sprite_index, 3, 0, top, sprite_width, sprite_height - top, x - sprite_xoffset, y + top - sprite_yoffset);
+}
 </string>
           </argument>
         </arguments>

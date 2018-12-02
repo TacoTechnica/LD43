@@ -17,3 +17,8 @@ _my_alerter._state = type;
 #define alerter_destroy
 /// alerter_destroy()
 instance_destroy(_my_alerter);
+
+#define alerter_set_question_fill
+/// alerter_set_question_fill(percent);
+
+_my_alerter._question_fill = argument0;
