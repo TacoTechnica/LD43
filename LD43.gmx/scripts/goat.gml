@@ -12,7 +12,9 @@ do {
     _move_dir = random(360);
     counter++;
 } until 
-    !collision_line(x, y, x + lengthdir_x(10, _move_dir), y + lengthdir_y(10, _move_dir), objCollision, false, true)
+    (!collision_line(x, y, x + lengthdir_x(10, _move_dir), y + lengthdir_y(10, _move_dir), objCollision, false, true) &&
+     !collision_line(x, y, x + lengthdir_x(10, _move_dir), y + lengthdir_y(10, _move_dir), objCollisionGoat, false, true)
+    )
     || counter >= 20;
 
 

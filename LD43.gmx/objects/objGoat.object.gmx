@@ -6,7 +6,7 @@
   <depth>0</depth>
   <persistent>0</persistent>
   <parentName>objMover</parentName>
-  <maskName>&lt;undefined&gt;</maskName>
+  <maskName>maskEntity</maskName>
   <events>
     <event eventtype="0" enumb="0">
       <action>
@@ -265,45 +265,46 @@ switch _state {
           <argument>
             <kind>1</kind>
             <string>/// State machine transitions
-
-var closeenough = sqr(x - objPlayer.x) + sqr(y - objPlayer.y) &lt; sqr(200);
-var sees_player = 
-      closeenough &amp;&amp; !collision_line(x, y, objPlayer.x, objPlayer.y, objCollision, false, false);
-
-switch _state {
-    case GOAT_STATE.STANDING:
-        // Wait till walking
-        if (alarm[0] == -1) alarm[0] = random(120) + 120;
-        alerter_set_alert(ALERT_STATE.NORMAL);
-        break;
-    case GOAT_STATE.WALKING:
-        // Wait till standing
-        if (alarm[0] == -1) alarm[0] = random(60) + 60;
-        alerter_set_alert(ALERT_STATE.NORMAL);
-        break;
-    case GOAT_STATE.FOOD:
-        if !sees_player || player_get_item_index() != objHay {
-            _state = GOAT_STATE.STANDING;
-        } else {
-            goat_follow_player();
-            alerter_set_alert(ALERT_STATE.HEART);
-        }
-        break;
-    case GOAT_STATE.FLEEING:
-        var near_guard = collision_circle(x, y, 50, objSentry, false, false);
-        if sees_player &amp;&amp; !near_guard {
-            goat_set_alert();
-            alarm[1] = -1;
-        } else {
-            if (alarm[1] == -1) alarm[1] = 120;
-        }
-        break;
-}
-
-if _state != GOAT_STATE.FLEEING {
-    if player_get_item_index() == objHay {
-        if sees_player {
-            _state = GOAT_STATE.FOOD;
+if instance_exists(objPlayer) {
+    var closeenough = sqr(x - objPlayer.x) + sqr(y - objPlayer.y) &lt; sqr(200);
+    var sees_player = 
+          closeenough &amp;&amp; !collision_line(x, y, objPlayer.x, objPlayer.y, objCollision, false, false);
+    
+    switch _state {
+        case GOAT_STATE.STANDING:
+            // Wait till walking
+            if (alarm[0] == -1) alarm[0] = random(120) + 120;
+            alerter_set_alert(ALERT_STATE.NORMAL);
+            break;
+        case GOAT_STATE.WALKING:
+            // Wait till standing
+            if (alarm[0] == -1) alarm[0] = random(60) + 60;
+            alerter_set_alert(ALERT_STATE.NORMAL);
+            break;
+        case GOAT_STATE.FOOD:
+            if !sees_player || player_get_item_index() != objHay {
+                _state = GOAT_STATE.STANDING;
+            } else {
+                goat_follow_player();
+                alerter_set_alert(ALERT_STATE.HEART);
+            }
+            break;
+        case GOAT_STATE.FLEEING:
+            var near_guard = collision_circle(x, y, 50, objSentry, false, false);
+            if sees_player &amp;&amp; !near_guard {
+                goat_set_alert();
+                alarm[1] = -1;
+            } else {
+                if (alarm[1] == -1) alarm[1] = 120;
+            }
+            break;
+    }
+    
+    if _state != GOAT_STATE.FLEEING {
+        if player_get_item_index() == objHay {
+            if sees_player {
+                _state = GOAT_STATE.FOOD;
+            }
         }
     }
 }
@@ -357,7 +358,7 @@ if _state != GOAT_STATE.FLEEING &amp;&amp; instance_exists(objPlayerSubduing) {
             <string>/// Alert guards if fleeing
 if _state == GOAT_STATE.FLEEING {
     with (objSentry) {
-        if !_sees_player {
+        if _state != SENTRY_STATE.GROUNDED &amp;&amp; !_sees_player {
             if sqr(x - other.x) + sqr(y - other.y) &lt; sqr(200) {
                 _move_target_x = objPlayer.x;
                 _move_target_y = objPlayer.y;
@@ -488,6 +489,33 @@ if mover_get_bounce_progress() &gt; _bounce_progress_counter {
         else
             audio_play_sound(sound_goat_walk_2, 2, false);
     }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Extra physics!
+if _state == GOAT_STATE.WALKING {
+    if place_meeting(x + _vel_x, y + _vel_y, objCollisionGoat) {
+        goat_choose_random_move_dir();
+    }
+    
 }
 </string>
           </argument>

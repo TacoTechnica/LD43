@@ -145,6 +145,8 @@ _bounce_progress_counter = 0;
             <string>/// Pickup object
 
 _item_pickup = noone;
+
+_goat_stack = 0;
 </string>
           </argument>
         </arguments>
@@ -196,8 +198,16 @@ if _state != PLAYER_STATE.CUTSCENE {
     _move_y_axis = 0;
 }
 
-if _move_x_axis != 0 || _move_y_axis != 0
-    _last_move_dir = point_direction(0, 0, _move_x_axis, _move_y_axis);
+if _move_x_axis != 0 || _move_y_axis != 0 {
+    var move_angle = point_direction(0, 0, _move_x_axis, _move_y_axis);
+    var adiff = angle_difference(move_angle, _last_move_dir);
+    var spd = clamp(10 * adiff / 45, 8, 30);
+    if abs(adiff) &lt; spd {
+        _last_move_dir = move_angle;
+    } else {
+        _last_move_dir += sign(adiff) * spd;
+    }
+}
 </string>
           </argument>
         </arguments>
@@ -326,28 +336,74 @@ visible = _state != PLAYER_STATE.CUTSCENE;
 
 if _state == PLAYER_STATE.NORMAL &amp;&amp; keyboard_check_pressed(vk_space) {
     var item = instance_place(x, y, objPickup);
+    
     if (item != noone &amp;&amp; item != _item_pickup) {
-        _item_pickup = item;
+        // Stack up goats
+        if item.object_index == objGoatSleeping &amp;&amp; player_get_item_index() == objGoatSleeping {
+            _goat_stack++;
+            instance_destroy(item);
+        } else {
+            if (item.object_index == objGoatSleeping) 
+                _goat_stack++;
+            else {
+                if _goat_stack != 0 {
+                    // Drop goats!
+                    while(_goat_stack &gt; 1) {
+                        instance_create(x + random(20) - 10, y + random(20) - 10, objGoatSleeping);
+                        _goat_stack--;
+                    }
+                    _goat_stack = 0;
+                }
+            }
+            _item_pickup = item;
+        }
         audio_play_sound(sound_pickup, 5, false);
     } else if _item_pickup != noone {
-        // TODO: Throw if a brick or something
-        if player_get_item_index() = objBrick {
+
+        if _goat_stack &gt; 0 &amp;&amp; collision_rectangle(x - 4, y - 16, x + 4, y + 4, objSacrificeAltar,true, false) {
+            // Sacrifice goats
+            // Sacrifice goat if placed on altar
+            if !objSacrificeAltar._sacrificing {
+                objSacrificeAltar._sacrificing = true;
+                objSacrificeAltar.image_speed = 10/60;
+                _goat_stack--;
+                if (_goat_stack == 0) {
+                    instance_destroy(_item_pickup);
+                    _item_pickup = noone;
+                }
+                audio_play_sound(sound_sacrifice, 6, false);
+            }
+        } else if player_get_item_index() = objBrick {
+            // Throw brick
             var throw_side_vel = 3;
+            _item_pickup.y = floor(y / 16) * 16 + 8;
             _item_pickup._height = 3;
             _item_pickup._vel_h = 2;
             _item_pickup._vel_x = lengthdir_x(throw_side_vel, _last_move_dir);
             _item_pickup._vel_y = lengthdir_y(throw_side_vel, _last_move_dir);
+            _item_pickup.sprite_index = _item_pickup._default_sprite;
             _item_pickup = noone;
+            audio_play_sound(sound_throw, 4, false);
         } else {
+            
             _item_pickup.y = y + 4;
+            _item_pickup.sprite_index = _item_pickup._default_sprite;
             _item_pickup = noone;
+            if _goat_stack != 0 {
+                // Drop goats!
+                while(_goat_stack &gt; 1) {
+                    instance_create(x + random(20) - 10, y + random(20) - 10, objGoatSleeping);
+                    _goat_stack--;
+                }
+                _goat_stack = 0;
+            }
             audio_play_sound(sound_goat_fall, 5, false);
         }
     }
 
     // Subdue goats!
     if _item_pickup == noone {
-    var goater = instance_place(x, y, objGoat);
+        var goater = instance_place(x, y, objGoat);
         if (goater != noone) {
             // Goat's a goater!
             _state = PLAYER_STATE.CUTSCENE;
@@ -383,6 +439,8 @@ if _state == PLAYER_STATE.NORMAL &amp;&amp; keyboard_check_pressed(vk_space) {
             <kind>1</kind>
             <string>/// Item pickup
 if _item_pickup != noone {
+    //show_debug_message("oPlayer Step 7: " + string(object_get_name( player_get_item_index())));
+    _item_pickup.sprite_index = noone;
     _item_pickup.x = x;
     _item_pickup.y = y - _bounce_height;
     _item_pickup.image_angle = _bounce_angle;
@@ -410,6 +468,76 @@ if _item_pickup != noone {
             <kind>1</kind>
             <string>/// Camera
 camera_follow(x, y - 8);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>604</id>
+        <kind>0</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>0</useapplyto>
+        <exetype>1</exetype>
+        <functionname>action_inherited</functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// If holding brick, draw retical
+
+if player_get_item_index() == objBrick {
+    var r = 5 * 16;
+    var dx = lengthdir_x(r, _last_move_dir);
+    var dy = lengthdir_y(r, _last_move_dir);
+    draw_sprite(sprRetical, 0, x+dx, y+dy);
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// If holding multiple goats, draw em
+
+if (_goat_stack != 0) {
+    draw_set_color(c_white);
+    draw_text(x + 8, y, "x " + string(_goat_stack));
+}
 </string>
           </argument>
         </arguments>

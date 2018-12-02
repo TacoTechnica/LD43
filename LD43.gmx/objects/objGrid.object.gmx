@@ -3,7 +3,7 @@
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
   <visible>0</visible>
-  <depth>0</depth>
+  <depth>-100000</depth>
   <persistent>-1</persistent>
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
@@ -29,8 +29,7 @@
 
 _grid = mp_grid_create(0, 0, room_width / 16, room_height / 16, 16, 16);
 
-// MUST BE CREATED AT END OF ALL OBJ_COLLISION CREATES
-mp_grid_add_instances(_grid, objCollision, false);
+alarm[0] = 1;
 </string>
           </argument>
         </arguments>
@@ -54,6 +53,30 @@ mp_grid_add_instances(_grid, objCollision, false);
           <argument>
             <kind>1</kind>
             <string>mp_grid_destroy(_grid);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Fill grid
+mp_grid_add_instances(_grid, objCollision, false);
 </string>
           </argument>
         </arguments>

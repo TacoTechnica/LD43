@@ -102,6 +102,37 @@ instance_create(0, 0, objLighting);
       </action>
       <action>
         <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Music
+_music_calm = audio_play_sound(music_calm, 100, true);
+_music_uhoh = audio_play_sound(music_uhoh, 100, true);
+
+audio_sound_gain(_music_uhoh, 0, 0);
+
+// 0: Calm
+// 1: Uhoh
+_music_transition = 0;
+_music_transition_target = 0;
+_music_transition_speed = 0.5 / 60.0;
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
         <id>222</id>
         <kind>0</kind>
         <userelative>0</userelative>
@@ -113,6 +144,56 @@ instance_create(0, 0, objLighting);
         <whoName>self</whoName>
         <relative>0</relative>
         <isnot>0</isnot>
+      </action>
+    </event>
+    <event eventtype="3" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Music
+
+// SET TRANSITION TARGET
+
+_music_transition_target = 0;
+with objSentry {
+    if _state  == SENTRY_STATE.ALERT {
+        other._music_transition_target = 1;
+        break;
+    }
+}
+
+// FOLLOW TARGET AND UPDATE MUSIC
+var delta_music = _music_transition_target - _music_transition;
+var spd = _music_transition_speed;
+if _music_transition_target == 1 {
+    spd *= 3;
+}
+if abs(delta_music) &lt; spd {
+    _music_transition = _music_transition_target;
+} else {
+    _music_transition += sign(delta_music) * spd;
+}
+
+_music_transition = clamp(_music_transition, 0, 1);
+
+audio_sound_gain(_music_calm, 1 - _music_transition, 100);
+audio_sound_gain(_music_uhoh, _music_transition, 10);
+</string>
+          </argument>
+        </arguments>
       </action>
     </event>
     <event eventtype="7" enumb="4">
@@ -147,6 +228,33 @@ if room != room_START {
     // Bottom
     wall = instance_create(room_height, -16, objCollision);
     wall.image_xscale = room_width / 16;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Tree depth
+for(var i = 0; i &lt; tile_get_count(); i++) {
+    var tile = tile_get_id(i);
+    if tile_get_background(tile) == bk_tree {
+        tile_set_depth(tile, -(tile_get_y(tile) + 60));
+    }
 }
 </string>
           </argument>

@@ -80,6 +80,7 @@ if !surface_exists(_shadow_surface)
 surface_set_target(_shadow_surface);
 draw_clear(c_black);
 draw_set_blend_mode(bm_subtract);
+//draw_set_blend_mode(bm_src_color);
 
 // Draw lights
 d3d_transform_stack_push();
@@ -92,6 +93,10 @@ if instance_exists(objPlayer)
 p_scale = 0.3;
 with (objSentry) {
     draw_sprite_ext(sprLightBeam, 0, x, y - 4, p_scale, p_scale, _look_direction, 0, 1);
+}
+with (objSacrificeAltar) {
+    var scale = 0.5 * min(_animation_index / _animation_index_light_duration, 1);
+    draw_sprite_ext(sprLightEvil, 0, x, y, scale, scale, 0, c_white, 0.8);
 }
     
 draw_set_blend_mode(bm_normal);
@@ -123,9 +128,9 @@ surface_reset_target();
             <string>/// Draw shadow surface
 
 //draw_set_blend_mode(bm_one); // To remove black from lights and surface
-//draw_set_blend_mode(bm_add);
+//draw_set_blend_mode_ext(bm_src_color, bm_zero);
 draw_surface_ext(_shadow_surface, view_xview, view_yview, 1, 1, 0, 0, _dark_alpha);
-//draw_set_blend_mode(bm_normal);
+draw_set_blend_mode(bm_normal);
 </string>
           </argument>
         </arguments>

@@ -13,19 +13,28 @@
     <sound>sound\sound_goat_fall</sound>
     <sound>sound\sound_pickup</sound>
     <sound>sound\sound_goat_alert</sound>
+    <sound>sound\sound_throw</sound>
+    <sound>sound\sound_thump</sound>
+    <sound>sound\sound_sacrifice</sound>
+    <sound>sound\music_calm</sound>
+    <sound>sound\music_uhoh</sound>
   </sounds>
   <sprites name="sprites">
     <sprites name="masks">
       <sprite>sprites\maskCollision</sprite>
+      <sprite>sprites\maskCollisionGoat</sprite>
       <sprite>sprites\maskEntity</sprite>
+      <sprite>sprites\maskBrick</sprite>
     </sprites>
     <sprites name="lights">
       <sprite>sprites\sprLight</sprite>
+      <sprite>sprites\sprLightEvil</sprite>
       <sprite>sprites\sprLightBeam</sprite>
     </sprites>
     <sprites name="icons">
       <sprite>sprites\sprZ</sprite>
       <sprite>sprites\sprAlerts</sprite>
+      <sprite>sprites\sprRetical</sprite>
     </sprites>
     <sprite>sprites\sprPlayer</sprite>
     <sprite>sprites\sprGoat</sprite>
@@ -35,10 +44,14 @@
     <sprite>sprites\sprTest</sprite>
     <sprite>sprites\sprHay</sprite>
     <sprite>sprites\sprBrick</sprite>
-    <sprite>sprites\sprWood</sprite>
+    <sprite>sprites\sprSacrificeAltar</sprite>
+    <sprite>sprites\sprPlayerCaught</sprite>
   </sprites>
   <backgrounds name="background">
+    <background>background\bk_grass</background>
+    <background>background\bk_tree</background>
     <background>background\bk_tileset</background>
+    <background>background\bk_temp</background>
   </backgrounds>
   <paths name="paths"/>
   <scripts name="scripts">
@@ -49,8 +62,12 @@
     <script>scripts\player.gml</script>
     <script>scripts\sentry.gml</script>
   </scripts>
+  <fonts name="fonts">
+    <font>fonts\font_main</font>
+  </fonts>
   <objects name="objects">
     <object>objects\objCollision</object>
+    <object>objects\objCollisionGoat</object>
     <objects name="utility">
       <object>objects\Gamestate</object>
       <object>objects\objLighting</object>
@@ -67,6 +84,8 @@
     <object>objects\objGoatSleeping</object>
     <object>objects\objHay</object>
     <object>objects\objBrick</object>
+    <object>objects\objSacrificeAltar</object>
+    <object>objects\objPlayerCaught</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\room_START</room>

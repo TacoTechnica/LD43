@@ -6,7 +6,7 @@
   <depth>0</depth>
   <persistent>0</persistent>
   <parentName>objPickup</parentName>
-  <maskName>&lt;undefined&gt;</maskName>
+  <maskName>maskBrick</maskName>
   <events>
     <event eventtype="0" enumb="0">
       <action>
@@ -82,6 +82,49 @@ _height = 0;
         <arguments>
           <argument>
             <kind>1</kind>
+            <string>/// Smack into things!
+
+
+if _height != 0 {
+    var poor_goat = instance_place(x, y, objGoat);
+    if poor_goat != noone {
+        instance_destroy(poor_goat);
+        var sleepy = instance_create(x, y, objGoatSleeping);
+        sleepy.image_xscale = image_xscale;
+        _vel_h *= 0.2;
+        //_vel_x *= 0.2;
+        //_vel_y *= 0.2;
+        audio_play_sound(sound_goat_fall, 4, false);
+    }
+    var guard = instance_place(x, y, objSentry);
+    if guard != noone &amp;&amp; guard._state != SENTRY_STATE.GROUNDED {
+        guard._state = SENTRY_STATE.GROUNDED;
+        _vel_h *= 0.2;
+        //_vel_x *= 0.2;
+        //_vel_y *= 0.2;
+        audio_play_sound(sound_goat_fall, 4, false);
+    }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
             <string>/// Physics
 if place_meeting(x + _vel_x, y, objCollision) {
     _vel_x = 0;
@@ -99,13 +142,25 @@ if (_height &gt; 0) {
 } else {
     // Smack into the ground!
     if _height &lt; 0 {
-        // Smack sound!
+        // Alert guards
+        with (objSentry) {
+            if (_state == SENTRY_STATE.GROUNDED) continue;
+            if sqr(x - other.x) + sqr(y - other.y) &lt; sqr(200) &amp;&amp;
+            !collision_line(x, y, other.x, other.y, objCollision, false, true) {
+                _state = SENTRY_STATE.SEARCHING;
+                _move_target_x = other.x;
+                _move_target_y = other.y;
+            }
+        }
+        
         var temp_emitter = part_emitter_create(Gamestate._main_part_system_ground);
         part_emitter_region(Gamestate._main_part_system_ground, temp_emitter, 
                 x - 2, x + 2, y - 2, y + 2, ps_shape_ellipse, ps_distr_gaussian);
         part_emitter_burst(Gamestate._main_part_system_ground, temp_emitter, 
                 Gamestate._brick_part_type, 4);
         part_emitter_destroy(Gamestate._main_part_system_ground, temp_emitter);
+
+        audio_play_sound(sound_thump, 4, false);
     }
     _height = 0;
     _vel_x = 0;
@@ -145,7 +200,7 @@ draw_ellipse(x - r, y - r/2, x + r, y + r/2, false);
 draw_set_alpha(1);
 
 // Object
-draw_sprite_ext(sprite_index, image_index, x, y - _height, image_xscale, image_yscale, image_angle, image_blend, image_alpha);
+draw_sprite_ext(_default_sprite, image_index, x, y - _height, image_xscale, image_yscale, image_angle, image_blend, image_alpha);
 </string>
           </argument>
         </arguments>

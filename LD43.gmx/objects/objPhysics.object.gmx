@@ -31,6 +31,9 @@ _vel_x = 0;
 _vel_y = 0;
 
 _fric = 0;
+
+// Do we collide?
+_collide = true;
 </string>
           </argument>
         </arguments>
@@ -55,17 +58,22 @@ _fric = 0;
             <kind>1</kind>
             <string>/// Physics and collisions
 
-if place_meeting(x + _vel_x, y, objCollision) {
-    //while !place_meeting(x + sign(_vel_x), y, objCollision) x += sign(_vel_x);
-    _vel_x = 0;
+if _collide {
+    if place_meeting(x + _vel_x, y, objCollision) {
+        //while !place_meeting(x + sign(_vel_x), y, objCollision) x += sign(_vel_x);
+        _vel_x = 0;
+    }
+    x += _vel_x;
+    
+    if place_meeting(x, y + _vel_y, objCollision) {
+        //while !place_meeting(x, y + sign(_vel_y), objCollision) y += sign(_vel_y);
+        _vel_y = 0;
+    }
+    y += _vel_y;
+} else {
+    x += _vel_x;
+    y += _vel_y;
 }
-x += _vel_x;
-
-if place_meeting(x, y + _vel_y, objCollision) {
-    //while !place_meeting(x, y + sign(_vel_y), objCollision) y += sign(_vel_y);
-    _vel_y = 0;
-}
-y += _vel_y;
 
 // Apply friction
 _vel_x *= (1 - _fric);
