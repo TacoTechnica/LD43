@@ -166,7 +166,8 @@ _bounce_progress_counter = 0;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// Destroy alert
+            <string>/// Destroy alert and silence
+goat_silence();
 alerter_destroy();
 </string>
           </argument>
@@ -356,13 +357,15 @@ if _state != GOAT_STATE.FLEEING &amp;&amp; instance_exists(objPlayerSubduing) {
           <argument>
             <kind>1</kind>
             <string>/// Alert guards if fleeing
-if _state == GOAT_STATE.FLEEING {
-    with (objSentry) {
-        if _state != SENTRY_STATE.GROUNDED &amp;&amp; !_sees_player {
-            if sqr(x - other.x) + sqr(y - other.y) &lt; sqr(200) {
-                _move_target_x = objPlayer.x;
-                _move_target_y = objPlayer.y;
-                _state = SENTRY_STATE.SEARCHING;
+if instance_exists(objPlayer) {
+    if _state == GOAT_STATE.FLEEING {
+        with (objSentry) {
+            if _state != SENTRY_STATE.GROUNDED &amp;&amp; !_sees_player {
+                if sqr(x - other.x) + sqr(y - other.y) &lt; sqr(200) {
+                    _move_target_x = objPlayer.x;
+                    _move_target_y = objPlayer.y;
+                    _state = SENTRY_STATE.SEARCHING;
+                }
             }
         }
     }

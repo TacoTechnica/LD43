@@ -86,9 +86,16 @@ draw_set_blend_mode(bm_subtract);
 d3d_transform_stack_push();
 d3d_transform_set_translation(-view_xview, -view_yview, 0);
 
+// Player and supers
 var p_scale = 0.3;
 if instance_exists(objPlayer)
     draw_sprite_ext(sprLight, 0, objPlayer.x, objPlayer.y - 8, p_scale, p_scale, 0, 0, 1);
+p_scale = 0.5;
+if instance_exists(objPlayerSuperTransition)
+    draw_sprite_ext(sprLight, 0, objPlayerSuperTransition.x, objPlayerSuperTransition.y - 8, p_scale, p_scale, 0, 0, 1);
+p_scale = 0.2 + max(random(0.5), 0.4);
+if instance_exists(objPlayerSuper)
+    draw_sprite_ext(sprLight, 0, objPlayerSuper.x, objPlayerSuper.y - 8, p_scale, p_scale, 0, 0, 1);
 
 p_scale = 0.3;
 with (objSentry) {

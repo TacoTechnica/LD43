@@ -336,7 +336,7 @@ visible = _state != PLAYER_STATE.CUTSCENE;
 
 if _state == PLAYER_STATE.NORMAL &amp;&amp; keyboard_check_pressed(vk_space) {
     var item = instance_place(x, y, objPickup);
-    
+
     if (item != noone &amp;&amp; item != _item_pickup) {
         // Stack up goats
         if item.object_index == objGoatSleeping &amp;&amp; player_get_item_index() == objGoatSleeping {

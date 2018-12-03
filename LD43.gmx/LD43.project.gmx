@@ -18,6 +18,8 @@
     <sound>sound\sound_sacrifice</sound>
     <sound>sound\music_calm</sound>
     <sound>sound\music_uhoh</sound>
+    <sound>sound\music_super</sound>
+    <sound>sound\sound_die</sound>
   </sounds>
   <sprites name="sprites">
     <sprites name="masks">
@@ -37,15 +39,19 @@
       <sprite>sprites\sprRetical</sprite>
     </sprites>
     <sprite>sprites\sprPlayer</sprite>
+    <sprite>sprites\sprPlayerSuper</sprite>
     <sprite>sprites\sprGoat</sprite>
     <sprite>sprites\sprSentry</sprite>
+    <sprite>sprites\sprSentryDead</sprite>
     <sprite>sprites\sprGoatPassedOut</sprite>
     <sprite>sprites\sprGoatSubdue</sprite>
     <sprite>sprites\sprTest</sprite>
     <sprite>sprites\sprHay</sprite>
     <sprite>sprites\sprBrick</sprite>
     <sprite>sprites\sprSacrificeAltar</sprite>
+    <sprite>sprites\sprSacrificeAltarSuper</sprite>
     <sprite>sprites\sprPlayerCaught</sprite>
+    <sprite>sprites\sprSign</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bk_grass</background>
@@ -64,6 +70,7 @@
   </scripts>
   <fonts name="fonts">
     <font>fonts\font_main</font>
+    <font>fonts\font_tutorial</font>
   </fonts>
   <objects name="objects">
     <object>objects\objCollision</object>
@@ -84,12 +91,20 @@
     <object>objects\objGoatSleeping</object>
     <object>objects\objHay</object>
     <object>objects\objBrick</object>
+    <object>objects\objSacrificeAltarSuper</object>
     <object>objects\objSacrificeAltar</object>
     <object>objects\objPlayerCaught</object>
+    <object>objects\objPlayerSuperTransition</object>
+    <object>objects\objPlayerSuper</object>
+    <object>objects\objSentryDead</object>
+    <object>objects\objSign</object>
+    <object>objects\objMenu</object>
   </objects>
   <rooms name="rooms">
-    <room>rooms\room_START</room>
+    <room>rooms\room_MENU</room>
     <room>rooms\room1</room>
+    <room>rooms\room_tutorial</room>
+    <room>rooms\room_START</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>

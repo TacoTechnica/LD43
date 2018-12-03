@@ -213,7 +213,9 @@ image_speed = 0;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>path_delete(_path);
+            <string>/// Clean up path + alerter
+path_delete(_path);
+alerter_destroy();
 </string>
           </argument>
         </arguments>
@@ -437,6 +439,10 @@ if instance_exists(objPlayer) {
             if (alarm[1] == -1) alarm[1] = 60*2.5;
             break;
             
+    }
+} else {
+    if _state == SENTRY_STATE.ALERT {
+        alerter_set_alert(ALERT_STATE.ALERT);
     }
 }
 </string>

@@ -7,6 +7,8 @@
 
 // Sets a random target near the last player position
 
+if !instance_exists(objPlayer) return 0;
+
 // How far to deviate from move target pos
 // In blocks (multiply by 16 later)
 var minR = 5;// * 16;
